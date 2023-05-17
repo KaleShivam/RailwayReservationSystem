@@ -1,0 +1,67 @@
+﻿using Microsoft.EntityFrameworkCore;
+using RailwayReservationSystem.Data;
+using RailwayReservationSystem.Models;
+using RailwayReservationSystem.Repo.RailwayReservationRepository;
+
+namespace Railway_Reservation.Repo.RailwayReservationRepository
+{
+    public class PassengerRepository : IPassenger
+    {
+        private readonly RailwayContext railwayContext;
+
+        public PassengerRepository(RailwayContext railwayContext)
+        {
+            this.railwayContext = railwayContext;
+        }
+        public async Task<List<Passenger>> GetAllPassenger()
+        {
+            return await railwayContext.Passengers.ToListAsync();
+        }
+
+        public async Task<Passenger> GetPassengerById(int id)
+        {
+            return await railwayContext.Passengers.FirstOrDefaultAsync(p => p.PassengerId == id);
+        }
+        public async Task<Passenger> AddPassenger(Passenger passenger)
+        {
+            await railwayContext.Passengers.AddAsync(passenger);
+            await railwayContext.SaveChangesAsync();
+            return passenger;
+        }
+        public async Task<Passenger> UpdatePassenger(int id, Passenger passenger)
+        {
+            var pass = await railwayContext.Passengers.FindAsync(id);
+
+            if (pass == null)
+            {
+                return null;
+            }
+            pass.PassengerId = id;
+            pass.Name = passenger.Name;
+           
+            pass.age = passenger.age;
+            pass.gender = passenger.gender;
+            pass.Phone_no = passenger.Phone_no;
+            await railwayContext.SaveChangesAsync();
+            return pass;
+
+        }
+
+        public async Task<bool> DeletePassengerById(int id)
+        {
+            var passenger = await railwayContext.Passengers.FindAsync(id);
+            if (passenger == null)
+            {
+                return false;
+            }
+            railwayContext.Passengers.Remove(passenger);
+            await railwayContext.SaveChangesAsync();
+
+            return true;
+        }
+
+
+
+
+    }
+}

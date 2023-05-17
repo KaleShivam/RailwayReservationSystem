@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Railway_Reservation.Repo.RailwayReservationRepository;
 using RailwayReservationSystem.Data;
+using RailwayReservationSystem.Models;
+using RailwayReservationSystem.Repo.RailwayReservationRepository;
 using RailwayReservationSystem.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<RailwayContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("RailwayCS")));
 builder.Services.AddScoped<ITrain, TrainRepository>();
+builder.Services.AddScoped<IPassenger, PassengerRepository>();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
